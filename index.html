@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pull A Card | The Wealthy Woman Oracle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cinzel:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --plum:#2E2340;
+  --plum-soft:#57496B;
+  --purple:#5B2A86;
+  --violet:#7B3FA0;
+  --gold-deep:#8A6A0C;
+  --pink:#E84F8A;
+  --pink-deep:#B32A68;
+  --grad:linear-gradient(120deg,#6A3494 0%,#9147AE 30%,#C55BA6 66%,#E86FA0 100%);
+  --grad-title:linear-gradient(112deg,#5B2A86 0%,#8A45A6 32%,#C0509D 66%,#E2609B 100%);
+  --grad-btn:linear-gradient(118deg,#D6438D 0%,#BE5DBE 52%,#9A76D2 100%);
+  --rail:262px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--plum);background:#241A33;-webkit-font-smoothing:antialiased;}
+
+.bg-layer{position:fixed;inset:0;background-image:var(--bg-url);background-size:cover;background-position:center;z-index:0;}
+.bg-wash{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(30,20,44,.58) 0%,rgba(30,20,44,.46) 45%,rgba(30,20,44,.62) 100%);}
+
+.shell{position:relative;z-index:2;display:flex;min-height:100vh;max-width:1240px;margin:0 auto;
+  background:#EDE2F7;box-shadow:0 0 110px rgba(20,12,30,.55);}
+
+/* rail */
+.rail{width:var(--rail);flex:0 0 var(--rail);
+  background:linear-gradient(168deg,#2A1F3C 0%,#3D2557 52%,#4E2C68 100%);
+  border-right:1px solid rgba(255,255,255,.09);
+  padding:34px 0 44px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.rail-mark{padding:0 26px 28px;}
+.rail-glyph{font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:#E2B6E8;opacity:.9;margin-bottom:10px;}
+.rail-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;line-height:1.12;
+  background:linear-gradient(112deg,#FBEFFF 0%,#F0B9DA 48%,#CDA7EE 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;}
+.rail-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(255,255,255,.62);margin-top:8px;}
+.rail-nav{display:flex;flex-direction:column;gap:2px;padding:0 14px;}
+.tab{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:0;background:transparent;cursor:pointer;
+  padding:13px 14px;border-radius:8px;font-family:'Inter',sans-serif;font-size:15px;font-weight:500;
+  color:rgba(255,255,255,.7);transition:background .25s ease,color .25s ease;position:relative;}
+.tab:hover:not(.locked){background:rgba(255,255,255,.1);color:#fff;}
+.tab:focus-visible{outline:2px solid #C9A6E8;outline-offset:2px;}
+.tab.locked{opacity:.3;cursor:not-allowed;}
+.tab.active{background:rgba(255,255,255,.15);color:#fff;font-weight:600;}
+.tab.active::before{content:'';position:absolute;left:0;top:9px;bottom:9px;width:3px;border-radius:3px;
+  background:linear-gradient(180deg,#F0A9C8,#C9A6E8);}
+.tab-num{font-family:'Cinzel',serif;font-size:12px;font-weight:600;width:20px;flex:0 0 20px;opacity:.8;}
+.tab-label{flex:1;}
+.rail-cards{padding:26px 22px 0;margin-top:26px;border-top:1px solid rgba(255,255,255,.13);}
+.rail-cards-label{font-family:'Cinzel',serif;font-size:11.5px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#E2B6E8;margin-bottom:14px;}
+.rail-card-img{border-radius:8px;overflow:hidden;box-shadow:0 10px 26px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.22);}
+.rail-card-img img{width:100%;display:block;aspect-ratio:2/3;object-fit:cover;}
+.rail-card-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;margin-top:9px;line-height:1.22;
+  background:linear-gradient(112deg,#FBEFFF 0%,#F3BCDA 55%,#CFA9EE 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;}
+.rail-restart{margin-top:14px;}
+
+/* stage */
+.stage{flex:1;min-width:0;padding:56px 44px 90px;background:linear-gradient(180deg,#F2E9FA 0%,#EADDF6 58%,#F0E2F2 100%);}
+.view{display:none;max-width:820px;margin:0 auto;}
+.view.active{display:block;animation:riseIn .5s ease both;}
+@keyframes riseIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+.eyebrow{font-family:'Cinzel',serif;font-size:15px;letter-spacing:.2em;text-transform:uppercase;color:var(--purple);font-weight:600;margin-bottom:18px;}
+.display{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,5vw,52px);font-weight:600;line-height:1.12;
+  background:var(--grad-title);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;}
+.display em{font-style:italic;font-weight:500;}
+.lede{font-family:'Cormorant Garamond',serif;font-size:21.5px;line-height:1.6;color:var(--plum-soft);margin-top:18px;max-width:640px;}
+.rule{height:2px;border:0;margin:34px 0;border-radius:2px;opacity:.5;
+  background:linear-gradient(90deg,#7B3FA0 0%,#E84F8A 46%,rgba(232,79,138,0) 100%);}
+
+/* three-card pick */
+.pick{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:660px;margin:46px auto 0;}
+.pick-card{border:0;padding:0;background:transparent;cursor:pointer;position:relative;
+  border-radius:14px;overflow:visible;animation:dealIn .55s ease both;
+  transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .4s ease;}
+.pick-card:nth-child(2){animation-delay:.1s;}
+.pick-card:nth-child(3){animation-delay:.2s;}
+.pick-card img{width:100%;display:block;aspect-ratio:2/3;object-fit:cover;border-radius:14px;
+  box-shadow:0 14px 34px rgba(46,25,70,.3);transition:box-shadow .4s ease;}
+.pick-card:hover{transform:translateY(-12px);}
+.pick-card:hover img{box-shadow:0 26px 46px rgba(46,25,70,.42);}
+.pick-card:focus-visible{outline:2px solid var(--purple);outline-offset:5px;border-radius:14px;}
+.pick-card.chosen{animation:popSelect .55s cubic-bezier(.34,1.4,.64,1) forwards;z-index:5;}
+.pick-card.chosen img{box-shadow:0 26px 50px rgba(46,25,70,.48),0 0 0 3px #C9A227;}
+.pick-card.faded{opacity:.18;pointer-events:none;transform:scale(.94);}
+@keyframes dealIn{from{opacity:0;transform:translateY(22px) rotate(-3deg);}to{opacity:1;transform:none;}}
+@keyframes popSelect{0%{transform:translateY(0) scale(1);}55%{transform:translateY(-22px) scale(1.09);}100%{transform:translateY(-16px) scale(1.05);}}
+.pick-note{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:var(--plum-soft);margin-top:30px;}
+
+/* reveal */
+.card-hero{width:100%;max-width:320px;margin:0 auto 32px;border-radius:16px;overflow:hidden;
+  box-shadow:0 22px 50px rgba(46,25,70,.3);border:1px solid rgba(255,255,255,.7);animation:riseIn .6s ease both;}
+.card-hero img{width:100%;display:block;}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,4.8vw,48px);font-weight:600;line-height:1.1;text-align:center;
+  background:var(--grad-title);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;}
+.card-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:21px;text-align:center;color:var(--plum-soft);margin-top:10px;margin-bottom:32px;}
+
+/* panels */
+.panel{background:#fff;border:1px solid rgba(91,42,134,.16);border-radius:14px;padding:34px 36px;margin-bottom:22px;box-shadow:0 14px 38px rgba(46,25,70,.13);}
+.panel-label{font-family:'Cinzel',serif;font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:var(--purple);font-weight:600;margin-bottom:20px;}
+.body-text p{font-size:17px;line-height:1.82;color:var(--plum);margin-bottom:16px;}
+.body-text p:last-child{margin-bottom:0;}
+.panel.in-short{background:linear-gradient(135deg,#F6EFFD 0%,#FFF 62%,#FCEFF6 100%);border-color:rgba(91,42,134,.26);}
+.panel.in-short .body-text p{font-size:18.5px;line-height:1.78;font-family:'Cormorant Garamond',serif;}
+.panel.practice{background:linear-gradient(135deg,#F7F0FD 0%,#FFF 52%,#FCEBF3 100%);
+  border-color:rgba(179,42,104,.28);border-left:4px solid var(--pink-deep);}
+.practice-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;margin-bottom:14px;
+  background:var(--grad-title);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;}
+
+/* tapping */
+.panel.tapping{border-left:4px solid var(--violet);}
+.tap-intro{font-size:16.5px;line-height:1.78;color:var(--plum-soft);margin-bottom:22px;}
+.tap-setup{background:linear-gradient(135deg,#F6EFFD,#FCEFF6);border-radius:11px;padding:22px 24px;margin-bottom:24px;
+  border-left:3px solid var(--pink-deep);}
+.tap-setup-label{font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--pink-deep);margin-bottom:11px;}
+.tap-setup-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:21px;line-height:1.6;color:var(--purple);}
+.tap-points{list-style:none;}
+.tap-points li{display:flex;gap:16px;padding:13px 0;border-bottom:1px solid rgba(91,42,134,.1);align-items:baseline;}
+.tap-points li:last-child{border-bottom:0;}
+.tap-pt{font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold-deep);flex:0 0 118px;}
+.tap-say{font-family:'Cormorant Garamond',serif;font-size:19.5px;line-height:1.5;color:var(--plum);}
+.tap-close{margin-top:22px;padding-top:20px;border-top:1px solid rgba(91,42,134,.14);
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;line-height:1.65;color:var(--plum-soft);}
+
+/* promo */
+.promo{border-radius:16px;padding:46px 42px;margin-bottom:22px;background:var(--grad);color:#fff;box-shadow:0 22px 50px rgba(91,42,134,.32);}
+.promo .panel-label{color:#FFE0EE;}
+.promo-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;line-height:1.14;margin-bottom:20px;}
+.promo-title em{font-style:italic;color:#FFE0A8;}
+.promo p{font-size:17.5px;line-height:1.8;margin-bottom:16px;color:rgba(255,255,255,.96);}
+.use-list{list-style:none;margin:4px 0 4px;}
+.use-list li{position:relative;padding-left:26px;margin-bottom:14px;font-size:16.5px;line-height:1.72;color:var(--plum);}
+.use-list li:last-child{margin-bottom:0;}
+.use-list li::before{content:'';position:absolute;left:2px;top:11px;width:8px;height:8px;border-radius:50%;
+  background:linear-gradient(135deg,var(--pink-deep),var(--violet));}
+.promo .use-list li{color:rgba(255,255,255,.96);}
+.promo .use-list li::before{background:#FFE0A8;}
+.join-btn{display:inline-block;margin-top:14px;text-decoration:none;font-family:'Cinzel',serif;font-size:12.5px;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;padding:17px 34px;border-radius:8px;background:#fff;color:var(--purple);
+  box-shadow:0 10px 26px rgba(0,0,0,.22);transition:transform .25s ease;}
+.join-btn:hover{transform:translateY(-2px);}
+.sign-off{margin-top:34px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:21px;line-height:1.65;color:var(--purple);}
+
+/* buttons */
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;}
+.btn{font-family:'Cinzel',serif;font-size:12.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  padding:15px 28px;border-radius:8px;border:1.5px solid var(--pink-deep);background:transparent;color:var(--pink-deep);
+  cursor:pointer;transition:background .25s ease,transform .25s ease,color .25s ease;}
+.btn:hover{background:rgba(214,67,141,.12);color:#9A2E5E;transform:translateY(-2px);}
+.btn:focus-visible{outline:2px solid var(--violet);outline-offset:3px;}
+.btn.primary{background:var(--grad-btn);border-color:transparent;color:#fff;box-shadow:0 8px 22px rgba(179,60,140,.28);}
+.btn.primary:hover{opacity:.93;color:#fff;}
+.btn.tiny{padding:11px 14px;font-size:11px;letter-spacing:.14em;width:100%;
+  border-color:rgba(255,255,255,.36);color:rgba(255,255,255,.86);}
+.btn.tiny:hover{background:rgba(255,255,255,.14);color:#fff;}
+
+@media (max-width:900px){
+  .shell{flex-direction:column;max-width:none;box-shadow:none;background:#EDE2F7;}
+  .rail{width:100%;flex:none;height:auto;position:sticky;top:0;padding:16px 0 10px;border-right:0;
+    border-bottom:1px solid rgba(255,255,255,.1);background:linear-gradient(150deg,#2A1F3C 0%,#3D2557 100%);z-index:20;}
+  .rail-mark{padding:0 20px 12px;}
+  .rail-title{font-size:23px;}
+  .rail-sub{display:none;}
+  .rail-nav{flex-direction:row;overflow-x:auto;gap:6px;padding:0 14px 4px;-webkit-overflow-scrolling:touch;}
+  .tab{white-space:nowrap;padding:10px 14px;font-size:14px;}
+  .tab.active::before{left:12px;right:12px;top:auto;bottom:2px;width:auto;height:3px;}
+  .rail-cards{display:flex;align-items:flex-start;gap:12px;overflow-x:auto;padding:14px 16px 4px;margin-top:10px;}
+  .rail-cards-label{display:none;}
+  .rail-card{flex:0 0 70px;}
+  .rail-restart{display:none;}
+  .stage{padding:34px 20px 70px;background:linear-gradient(180deg,#F2E9FA 0%,#EADDF6 100%);}
+  .panel{padding:26px 22px;}
+  .promo{padding:32px 24px;}
+  .promo-title{font-size:28px;}
+  .pick{gap:11px;margin-top:34px;}
+  .tap-points li{flex-direction:column;gap:5px;}
+  .tap-pt{flex:none;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important;}
+  html{scroll-behavior:auto;}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="bg-wash"></div>
+
+<div class="shell">
+  <nav class="rail" aria-label="Sections">
+    <div class="rail-mark">
+      <div class="rail-glyph">Embody Wealth</div>
+      <div class="rail-title">The Wealthy<br>Woman Oracle</div>
+      <div class="rail-sub">Pick a card. Any card.</div>
+    </div>
+    <div class="rail-nav" id="railNav"></div>
+    <div id="railCards"></div>
+  </nav>
+  <main class="stage">
+    <section class="view active" id="view-pull"></section>
+    <section class="view" id="view-card"></section>
+    <section class="view" id="view-more"></section>
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   THE WEALTHY WOMAN ORACLE — social version
+   Swap these if your paths or links change.
+   ============================================================ */
+var CARD_IMG_BASE = "https://aurailia.github.io/embody-wealth-monthly-theme/cards/";
+var CARD_BACK     = CARD_IMG_BASE + "cover-1.png";
+var BG_IMAGE      = "https://aurailia.github.io/embody-wealth-monthly-theme/images/background.png";
+var COMMUNITY_URL = "https://www.skool.com/embody-wealth";
+var FULL_DECK_URL = "https://aurailia.github.io/wealthy-woman-oracle-cards/";
+
+document.documentElement.style.setProperty('--bg-url', 'url("' + BG_IMAGE + '")');
+
+var DECK = [
+ {
+  "slug": "abundance-flows",
+  "title": "Abundance Flows",
+  "desc": "What you've been waiting for is already moving toward you.",
+  "summary": "The thing you want isn't stuck, and it was never as far off as the fear made it look. What's slowing it down is how hard you're gripping it. Loosen the hold on the outcome and the timeline, and watch how fast it moves. 💧",
+  "meaning": "This is a flat-out yes, and a card of flow. ✨💸\n\nThe thing you've been gripping so hard your knuckles ache? It isn't stuck, and it was never as far off as the fear made it look. Abundance doesn't reward strain. 🚫 It moves like water 💧, toward the most open, unbothered place in the room.\n\nRight now the channel between you and what you want is wide open. 🌊 The current's already running your way. What's being asked of you isn't more hustle. It's fewer death grips. 🙌",
+  "why": "You pulled this because some part of you has been holding its breath, arms crossed, waiting for receipts before you'll believe it's working. 🧾😮‍💨\n\nThat bracing is the only dam here, and babe, you built it yourself. 🧱 Notice where you're gripping, the outcome, the timeline, the precious how, and unclench. ✋\n\nYou don't have to push the river. You just have to stop standing in front of it like a very determined rock. 🪨😅 Soften today and watch how fast things move once you're out of your own way. 💫",
+  "practiceTitle": "The Unclench Sweep",
+  "practiceText": "Sit down and find the grip. It's in your body somewhere, usually the jaw, the shoulders or the hands. 💧\n\nStart at the top of your head and move down slowly. When you find the clenched place, exhale into it and let it go on purpose. Do that three times.\n\nThen name out loud the one thing you're gripping hardest. The outcome, the timeline, the exact way it has to happen. Say: I want this and I'm not going to strangle it. Then go do something completely unrelated for an hour."
+ },
+ {
+  "slug": "the-threshold",
+  "title": "The Threshold",
+  "desc": "You're standing at a doorway. Cross anyway.",
+  "summary": "You're at a doorway you already know you're meant to walk through, waiting on a certainty that only ever shows up after the step. The waiting is the whole problem. Cross now and let the ground appear under your foot. 🚪",
+  "meaning": "Every real expansion makes you move before you feel ready, which is rude of it 🙄, and also non-negotiable. 🚪\n\nBehind you is the comfy, broken-in identity you've technically outgrown but still know how to wear. 👕 Ahead is something you can't fully see, and the not-seeing is exactly what's gluing your feet to the floor. 🦶\n\nBut thresholds aren't a place to set up camp. ⛺🚫 They're a place to walk through. Your next level lives on the other side of a version of you who moved before the lights came on. 💡",
+  "why": "You pulled this because you've been waiting to feel certain, and spoiler 🎬, that's not coming while you're standing still.\n\nCertainty shows up after the step, never before 👣, no matter how long you stare at the door hoping it'll hand you a guarantee. 📜 You already know the next move. You've just been negotiating with yourself about needing more time, more clarity, more proof.\n\nYou don't. 🙅‍♀️ Consider this a gentle hand on your back. Cross now. The ground shows up when your foot does. ✨",
+  "practiceTitle": "Cross It Literally",
+  "practiceText": "Pick a doorway in your house. Any one will do. 🚪\n\nStand on the near side and say out loud what you've outgrown. The identity, the price, the way you've been working, whatever it is you technically know you're done with. Then say what's waiting on the other side.\n\nStep through. Don't do it slowly or make it precious. Just walk. Then go straight into the next thing on your list as the woman who already crossed, before your brain can talk you back."
+ },
+ {
+  "slug": "tend-the-roots",
+  "title": "Tend the Roots",
+  "desc": "What you planted is still growing underground.",
+  "summary": "What you planted is alive, it's just doing the underground part that nobody claps for. Pulling it up to check is how good things die right before they surface. Keep watering and stop making it audition every week. 🌱",
+  "meaning": "Not everything blooms the season you plant it, and demanding it to is a great way to lose your mind. 🌱😵‍💫\n\nThere's a long, quiet, deeply un-glamorous phase where the real work happens out of sight, roots going deep enough to hold the weight of what's coming. 🌳 This is patience, not rejection.\n\nWhat you set in motion is alive and well. It's just doing the underground work first, the part nobody claps for 👏🚫 and that does not photograph well. 📸 The harvest is coming. 🌾 The timing's simply not yours to boss around.",
+  "why": "You pulled this because you were about to yank something up by the roots to check if it was growing 🪴, which is exactly how good things die in the dark right before they break the surface. 🌙\n\nYou've started grading it on how fast it paid off. Stop. ✋ Keep watering. 💧 Keep showing up for it without making it audition for its life every week. 🎭\n\nWhat feels like nothing happening is actually everything happening, just one frustrating layer below where you can see. 🌱✨",
+  "practiceTitle": "Water It Without Checking",
+  "practiceText": "Name the thing you've been about to yank up to see if it's working. The offer, the content, the relationship, the practice. 🌱\n\nGive it one round of care today with no measuring attached. Post it, send it, show up for it, water it. Then close the tab.\n\nSet a date at least three weeks out and write it down. That's the next time you're allowed to look at the numbers. Between now and then your only job is tending."
+ },
+ {
+  "slug": "the-mirror",
+  "title": "The Mirror",
+  "desc": "Your money is reflecting a pattern, not a punishment.",
+  "summary": "However money's behaving right now, it's showing you a pattern rather than passing judgement on your worth. You can't fix a reflection by yelling at the glass. Change the belief underneath and the picture rearranges itself. 🪞",
+  "meaning": "Money is the most brutally honest mirror you'll ever stand in front of. 🪞💯\n\nHowever it's behaving, scarce, chaotic, feast-then-famine 🍽️, gone the second it arrives, it's not a verdict on your worth. It's a reflection of a pattern running underneath, usually one you learned so young you forgot it was even there. 👶\n\nHere's the relief 😮‍💨, you can't fix a reflection by yelling at the mirror. 📣🚫 Change what's being reflected, the old belief, the inherited fear, the tired story, and the image rearranges itself without you touching the glass. ✨",
+  "why": "You pulled this because you've been taking your bank balance personally 🏦, reading it as proof you're behind, bad with money, or simply not built for this. 💜\n\nThat shame is the heaviest thing you're carrying, and it isn't even accurate. Look at your money today the way you'd look at a friend's mess, curious instead of cruel. 🔍\n\nAsk what it's showing you, not what it's saying about you. The pattern it's reflecting is the exact thing that's finally ready to heal. 🌿",
+  "practiceTitle": "Look Without Flinching",
+  "practiceText": "Open your banking app right now. Don't tidy it first, don't wait for a better day, don't do it after you've earned the right. 🪞\n\nLook at the number for sixty seconds without narrating what it says about you. The story will start up, it always does. When it does, say out loud: that's a pattern, not a verdict.\n\nThen write down one belief about money you'd bet good money you picked up before you were ten. Whatever you wrote, that's the thing in the mirror. The number was only ever the reflection.",
+  "tapping": {
+   "setup": "Even though my bank balance feels like a verdict on who I am, it's showing me a pattern I'm allowed to change.",
+   "points": [
+    [
+     "Eyebrow",
+     "This dread when I open the app"
+    ],
+    [
+     "Side of eye",
+     "Reading the number as a report card on me"
+    ],
+    [
+     "Under eye",
+     "Beliefs I picked up before I could question them"
+    ],
+    [
+     "Under nose",
+     "It's a reflection, not a sentence"
+    ],
+    [
+     "Chin",
+     "I don't have to yell at the mirror"
+    ],
+    [
+     "Collarbone",
+     "I can change what's being reflected"
+    ],
+    [
+     "Under arm",
+     "Willing to look without the story"
+    ],
+    [
+     "Top of head",
+     "This number is information, and I can work with information"
+    ]
+   ]
+  }
+ },
+ {
+  "slug": "the-open-hand",
+  "title": "The Open Hand",
+  "desc": "You can't receive with a closed fist.",
+  "summary": "You're wildly generous and quietly terrible at receiving, and something good is trying to reach you while you deflect it. An open hand is the only kind anything can land in. Whatever you're clenching has to go down first. 🤲",
+  "meaning": "There's a specific kind of woman who is wildly generous and absolutely terrible at receiving. 🤲😬\n\nShe gives, holds, provides, carries, and the instant something good comes back her way, the hands slam shut. ✊ This card is about that slam.\n\nYou've been asking the universe for more 🙏 while gripping resentment, the need to earn it, the scorekeeping, and the suspicion that receiving makes you owe somebody. But an open hand is the only kind anything can land in. 🖐️ Whatever you're clenching has to be set down before the good stuff can be set in. 🎁",
+  "why": "You pulled this because something good is genuinely trying to reach you and you keep swatting it away 🏏, deflecting the compliment, refusing the help, explaining at length why you're fine, really. 🙃\n\nWatch your body next time someone offers you something, money 💵, support, praise, ease. That little flinch? That's the whole lesson, on display. 😅\n\nPractice keeping your hand, and your heart 💜, open a few seconds past comfortable. Receiving is a skill, not a character flaw, and this is the month you finally get good at it. 🌟",
+  "practiceTitle": "Two Seconds Past Comfortable",
+  "practiceText": "Next time somebody offers you anything today, a compliment, help with the bags, the last seat, the discount, take it. 🤲\n\nNo deflecting. No oh you didn't have to. No immediately offering something back to level the score. Just thank you, and then nothing.\n\nWatch what your body does in the gap. That little flinch is the whole lesson showing itself. Stay in it two seconds past comfortable and let it pass. That's the muscle, and it's the only way it gets built.",
+  "tapping": {
+   "setup": "Even though receiving makes me want to immediately give something back, I'm allowed to let good things land.",
+   "points": [
+    [
+     "Eyebrow",
+     "This flinch when someone gives me something"
+    ],
+    [
+     "Side of eye",
+     "The rush to even the score"
+    ],
+    [
+     "Under eye",
+     "Feeling safer as the one who gives"
+    ],
+    [
+     "Under nose",
+     "A closed hand can't hold anything"
+    ],
+    [
+     "Chin",
+     "I don't owe anyone for their kindness"
+    ],
+    [
+     "Collarbone",
+     "Willing to say thank you and stop there"
+    ],
+    [
+     "Under arm",
+     "Receiving is not a debt"
+    ],
+    [
+     "Top of head",
+     "My hands are open and it's safe to let it land"
+    ]
+   ]
+  }
+ },
+ {
+  "slug": "the-reckoning",
+  "title": "The Reckoning",
+  "desc": "The avoidance costs more than the truth.",
+  "summary": "There's something you've been refusing to look at, and it's been running the show from the dark precisely because you won't turn the light on. Facing it costs about ninety seconds. Avoiding it has been costing you for months. 💡",
+  "meaning": "This is the honest-numbers card, and despite the dramatic name 🎭, there's nothing scary in it, only freedom on the far side. 🕯️\n\nWealth doesn't start with manifestation or mindset. It starts with being willing to look. 👁️ The thing you've been dodging, the account you won't open, the number you won't add up 🔢, the conversation you keep rescheduling in your head, has been growing in the dark precisely because you keep refusing to flip the light on. 💡\n\nWhat you face loses its grip on you. What you avoid quietly runs the whole show from backstage. 🎬",
+  "why": "You pulled this because you know exactly what you've been avoiding, and reading this just made your stomach do a little drop. 🎢😬\n\nThat drop is the truth knocking, politely, for now. ✊🚪 The fear's convinced you that not knowing is safer, but the not-knowing is costing you way more than the reality ever could, in peace, in energy, in every decision you can't make because you won't look at the facts.\n\nOpen the account today. Read the number. Have the conversation. 📋 The relief waiting on the other side is bigger than you can picture from here. 😮‍💨✨",
+  "practiceTitle": "Open The Thing",
+  "practiceText": "You already know what it is. The account you won't open, the number you won't add up, the conversation you keep rescheduling in your head. 💡\n\nDo it today. Not this week. Today. Open it, read it, write the real figure down on paper where you can see it.\n\nThe drop in your stomach lasts about ninety seconds. What the avoiding has been costing you in decisions you couldn't make has been running for months. Trade the ninety seconds.",
+  "tapping": {
+   "setup": "Even though I've been avoiding the number because I'm scared of what it says about me, I can look at it and still be okay.",
+   "points": [
+    [
+     "Eyebrow",
+     "This knot when I think about opening it"
+    ],
+    [
+     "Side of eye",
+     "Everything I've been not-looking at"
+    ],
+    [
+     "Under eye",
+     "The fear that the truth is worse than the dread"
+    ],
+    [
+     "Under nose",
+     "The avoiding has been costing me more"
+    ],
+    [
+     "Chin",
+     "I can survive ninety seconds of honesty"
+    ],
+    [
+     "Collarbone",
+     "Willing to see what's actually there"
+    ],
+    [
+     "Under arm",
+     "I can't decide anything from the dark"
+    ],
+    [
+     "Top of head",
+     "Looking at it is how I take the power back"
+    ]
+   ]
+  }
+ },
+ {
+  "slug": "more-than-enough",
+  "title": "More Than Enough",
+  "desc": "You're allowed to want the whole thing.",
+  "summary": "You've been trimming what you want down to something polite and calling it being reasonable. The question was never really the number, it was permission. You're allowed to want the whole thing. 👑",
+  "meaning": "There's a quiet little con women get taught early 🤫, shrink your desires to something reasonable, ask for just enough, feel greedy the second you want more than survival. 👑\n\nThis card is here to blow the whistle on it. 📣 Your money question was never really about a number. It's about permission. ✋\n\nAre you allowed to have the whole life, not the sensible, scaled-back, don't-make-a-scene version, but the actual full thing you want? Yes. 💯 It was always yes. You just kept waiting for someone official to sign off. 📝",
+  "why": "You pulled this because you've been trimming your dreams to be polite ✂️, pricing yourself for other people's comfort, wanting the big thing and saying the small one out loud. ✨\n\nThat self-editing is expensive 💸, because you can't call in a life you won't even let yourself want. Today, want all of it, the income, the freedom, the home, the impact, the ease, without the reflex apology or the immediate making-it-smaller. 🙅‍♀️\n\nYour desire isn't too much. It's the map. 🗺️ Stop folding it back up before you've read where it actually leads.",
+  "practiceTitle": "Say The Whole Thing",
+  "practiceText": "Write down what you want. Then read it back and find where you shrank it. 👑\n\nYou'll have done it somewhere. A smaller number, a shorter timeline, a version that wouldn't embarrass you if someone read it over your shoulder.\n\nCross that out and write the actual one. The greedy-feeling one. Read it out loud without apologising or immediately explaining why it's reasonable. Sit in the discomfort for a full minute before you close the notebook.",
+  "tapping": {
+   "setup": "Even though wanting the whole thing feels greedy, I'm allowed to want what I actually want.",
+   "points": [
+    [
+     "Eyebrow",
+     "This guilt about wanting more"
+    ],
+    [
+     "Side of eye",
+     "How fast I shrink it to something polite"
+    ],
+    [
+     "Under eye",
+     "Everyone who taught me not to make a scene"
+    ],
+    [
+     "Under nose",
+     "Wanting more doesn't take it from anyone"
+    ],
+    [
+     "Chin",
+     "I'm allowed to say the full-size want"
+    ],
+    [
+     "Collarbone",
+     "There's no prize for asking small"
+    ],
+    [
+     "Under arm",
+     "I can hold a big desire without apologising"
+    ],
+    [
+     "Top of head",
+     "I'm allowed to want the whole thing"
+    ]
+   ]
+  }
+ },
+ {
+  "slug": "the-quiet-yes",
+  "title": "The Quiet Yes",
+  "desc": "It's already decided in your favor.",
+  "summary": "The answer already came. It just arrived quietly instead of with confetti. You've been auditioning for a part you already booked, so stop hunting for proof and move like a woman who got her yes. ✨",
+  "meaning": "Not every yes from the universe shows up with confetti and a marching band. 🎉🎺\n\nSome arrive as a settling in your chest, a door that swings open the moment you stop yanking on all the others 🚪, a knowing that doesn't feel the need to prove itself. This is that kind. 🤫\n\nThe thing you've been anxiously circling has already tipped in your favor, decided in the unseen, and all that's left is the boring logistics of it arriving in the seen. ⏳ You can stop auditioning for a part you already booked. 🎬✅",
+  "why": "You pulled this because you came in looking for a sign, some confirmation that it's going to be okay, you're on the right path, the thing works out. 🔮\n\nHi. 👋 This is the sign. The anxious double-checking, the polling everyone you know for reassurance, the refreshing for proof 🔄, you can put all of it down now.\n\nMove through today like a woman who already got her yes, because you did. ✨ The certainty you've been hunting on the outside is right there the second you decide to trust the quiet knowing you already feel. 💫",
+  "practiceTitle": "Stop Checking",
+  "practiceText": "For the rest of today, don't ask anyone else about the thing. ✨\n\nNo polling your friends, no refreshing for proof, no running it past one more person to see if they agree. You already have your answer and the checking is anxiety wearing a productive costume.\n\nWhen the urge hits, hand on your chest, say it's already decided, and carry on with whatever you were doing. Notice by tonight how much time the checking was quietly eating."
+ },
+ {
+  "slug": "not-yet",
+  "title": "Not Yet",
+  "desc": "The delay is mercy, not denial.",
+  "summary": "This is a hold rather than a refusal. What you're pushing for is being kept until you can carry it without it cracking you. Use the pause instead of resenting it. ⏳",
+  "meaning": "There's a big difference between no and not yet, and in our impatience, most of us treat them as the same insult. ⏳😤\n\nWhat you're pushing for isn't being refused. It's being held, on purpose 🤝, until you can carry it without it cracking you. If it showed up in the exact state you're in right now, you'd leak it, sabotage it, or get flattened by the weight of it, and somewhere you know that.\n\nThe delay isn't the universe withholding. It's the universe spotting you. 🏋️‍♀️ The pause is doing something for you that you can't see yet. 🌙",
+  "why": "You pulled this because you're rushing something, gripping a timeline, reading the wait as evidence it's just not happening for you. ⏰😩\n\nThis card came to gently correct the record, the waiting is working in your favor. Use it instead of resenting it. 💪 Build the capacity, heal the pattern, become the woman who can actually receive this and keep it.\n\nThe future you on the other side of this pause will be so relieved it didn't arrive a second sooner. 🙏 Trust the holding. It's mercy in a slightly annoying disguise. 😅✨",
+  "practiceTitle": "What the Wait Is Building",
+  "practiceText": "Write the thing you're waiting on at the top of a page. ⏳\n\nUnderneath it, answer one question honestly. What would crack if it landed today, in the exact state you're in right now? Your money habits, your capacity, your boundaries, your support, the way you'd handle it going public. Name the real one, not the flattering one.\n\nThen write the single thing you'll build while you wait. The pause has a job. Give it one and it stops feeling like punishment."
+ },
+ {
+  "slug": "the-overflow",
+  "title": "The Overflow",
+  "desc": "Picture it spilling over, not just barely enough.",
+  "summary": "You've been asking for exactly enough and mistaking survival for the ceiling. Wealth runs on surplus, the kind that lets you give and rest without checking the balance first. Aim higher than getting by. 🌊",
+  "meaning": "Scarcity trains you to ask for exactly enough, to size every desire to bare survival, to feel safest with just barely sufficient. 😬\n\nWealth runs on an entirely different setting. 🌊 It expects overflow, the surplus, the more-than-needed, the abundance that spills past your own bills 💸 and lets you give freely, rest without guilt, and say yes without first consulting the balance like it's your stern accountant. 🤓\n\nOverflow isn't greedy. It's the natural state of a life that quit operating from lack. 🙌 It's what makes generosity feel easy instead of terrifying. 💛",
+  "why": "You pulled this because you've been calibrating your whole vision to survival, asking for just enough to cover the bills and not drown. 🆘\n\nStability's great, but you've mistaken it for the ceiling when it's barely the floor. 📏 Today, let yourself picture the version where there's genuinely more than enough, where money's a source of ease and choice and yes instead of a low hum of dread.\n\nThat overflow frequency is the one that lets you give from a full cup instead of a leaking one. 🥤 Aim higher than survival. You're allowed, I promise. 💫",
+  "practiceTitle": "Room In The Picture",
+  "practiceText": "Picture the number you've been asking for. Whatever it is, you'll have set it at survival plus a little. 🌊\n\nNow picture the version with real room in it. Enough for the bills, plus the thing you keep deferring, plus giving without checking the balance first, plus a cushion you never touch.\n\nWatch what your body does. Tightness, guilt, a fast urge to be reasonable about it. Breathe there until it settles, then write the bigger number down and make that the one you're actually asking for.",
+  "tapping": {
+   "setup": "Even though asking for more than enough feels indulgent, I'm allowed to want a life with real room in it.",
+   "points": [
+    [
+     "Eyebrow",
+     "This tightness when I picture surplus"
+    ],
+    [
+     "Side of eye",
+     "Setting my goal at survival and calling it sensible"
+    ],
+    [
+     "Under eye",
+     "Guilt about wanting a cushion"
+    ],
+    [
+     "Under nose",
+     "Barely enough has kept me braced for years"
+    ],
+    [
+     "Chin",
+     "I'm allowed to have more than I need"
+    ],
+    [
+     "Collarbone",
+     "Overflow is what lets me give and rest"
+    ],
+    [
+     "Under arm",
+     "I can hold surplus without guilt"
+    ],
+    [
+     "Top of head",
+     "There's room for me to have room"
+    ]
+   ]
+  }
+ },
+ {
+  "slug": "she-is-here",
+  "title": "She Is Here",
+  "desc": "The woman you're becoming isn't in next year.",
+  "summary": "You keep filing the woman you're becoming under next year. She's a frequency, and she's available in the very next decision you make. Make one today the way she'd make it. 👠",
+  "meaning": "You keep talking about your future self like she's got an apartment in some better year 🏙️, available right after the income hits or the business calms down or you finally feel ready. 👑\n\nShe's not a destination, though. She's a frequency, and she's here now, in this very ordinary moment, in the next small choice you make. She's the one deciding whether to meet today with dread or with expectation. ✨\n\nThe woman with the thriving business doesn't think differently because she got the result. She got the result because she decided to be her first. 💅",
+  "why": "You pulled this because you keep filing her under later 🗂️, telling yourself you'll get to be her once you've earned it, once the proof's in, once it's safe.\n\nThat's backwards, and frankly some part of you is exhausted from waiting for permission to be who you already are. 😮‍💨 Quit saving her for a special occasion. Make one decision today the way she would, how she'd speak, what she'd charge 💰, what she'd flat-out refuse to tolerate.\n\nShe's not ahead of you on the road. She's standing right where you are, tapping her foot 👠, waiting for you to let her drive. 🚗",
+  "practiceTitle": "One Decision As Her",
+  "practiceText": "Pick one thing off today's list. Just one. 👠\n\nNow make it the way she'd make it, the woman with the business already thriving. What she'd charge for it. How she'd word the message. What she'd decline without writing a paragraph of explanation first.\n\nDon't upgrade your whole life today. Make one decision at her frequency and let your body catch up to it. She's not waiting for you to be ready. She's waiting for you to move once."
+ },
+ {
+  "slug": "the-seed-money",
+  "title": "The Seed",
+  "desc": "Something small already came. Count it.",
+  "summary": "Small good things have already arrived and you've walked straight past them, too busy lacking the big one to notice. Those are seeds, and the harvest you want gets built out of them. Count what came. 🌱",
+  "meaning": "Abundance almost never arrives as the big, cinematic moment you've been scanning the horizon for. 🎬🔭\n\nIt comes quietly first, in forms easy to miss when your eyes are locked on the dramatic version, a refund, an unexpected gift 🎁, a sale you didn't chase, a kindness, a small surprise yes. These aren't runner-up prizes. They're seeds. 🌱\n\nThe giant harvest you want 🌾 is built entirely out of the small things you keep waving off because they didn't show up in the size or shape you demanded.",
+  "why": "You pulled this because you've been so fixated on what hasn't arrived that you've gone face-blind to what has. 🙈\n\nThere have been small abundances lately. ✨ You breezed right past them, too busy lacking the big thing to clock the little ones landing in your hands. 🤲 This is your recognition card.\n\nLook back over the last week and actually count what came, no matter how unimpressive. 🔢 Name it. Let it land. Gratitude isn't decorative here, it's the literal mechanism that tells the universe to send more of what you're finally willing to notice. 🌟",
+  "practiceTitle": "Count The Last Seven Days",
+  "practiceText": "Open a note and go back through the last week. 🌱\n\nWrite down everything that came in, no matter how unimpressive. The refund. The free coffee. The message out of nowhere. The sale you didn't chase. The kindness. The small yes.\n\nDon't rank them and don't skip the ones that feel too small to count. Read the finished list out loud. That's the harvest starting. You've been walking past it because it didn't arrive in the size you ordered."
+ },
+ {
+  "slug": "release-the-how",
+  "title": "Release the How",
+  "desc": "You don't need to see the whole staircase.",
+  "summary": "You've been trying to project-manage the route the money takes to reach you, and the grip is closing the very channels it could arrive through. Hold the vision, feel it real, drop the how. It usually comes by a road you'd never have picked. 🗺️",
+  "meaning": "You've been trying to micromanage the exact route the money takes to reach you 🗺️, casting the source, the timing, the method, as if the whole manifestation hinges on you solving the logistics personally. 🗝️\n\nIt doesn't, and that grip is actually pinching shut the channels it could arrive through. 🤏 Your job is to hold the vision clearly and feel it as real.\n\nThe how is genuinely not your department. 🙅‍♀️ It's handled by something with a much wider view than your planning brain 🧠, and it almost always shows up by a route you'd never have guessed in a thousand years. ✨",
+  "why": "You pulled this because you've been gripping a plan, convinced that if you can't see precisely how it'll happen, it won't. 📋😬\n\nThat need to control the how is just fear in a sensible blazer. 🧥😏 Loosen it today. Get crystal clear on what you want and how it feels to have it, then deliberately drop the demand to know the path.\n\nStay open to the random check 💵, the out-of-nowhere message 📩, the door you didn't know existed. 🚪 The surprise route is usually the better one, but you have to stop blocking it with your insistence on the one you sketched out. ✏️",
+  "practiceTitle": "Drop The Route",
+  "practiceText": "Write down what you want and how it'll feel to have it. Be specific about the feeling. 🗺️\n\nUnderneath, write out the route you've been insisting on. The source, the timing, the exact way it has to arrive. Look at it properly.\n\nThen strike the whole route through. Physically cross it out. Write: this or something better, by any road. Stay awake today for the message, the offer, the door you didn't sketch, because that's usually the one it comes through."
+ },
+ {
+  "slug": "worth-the-ask",
+  "title": "Worth the Ask",
+  "desc": "Raise it. Say the number. Don't flinch.",
+  "summary": "You already know your prices are too low, and the flinch you feel saying the higher number is just an old story leaving your body. Say it and hold the silence after. The right people say yes to the woman who knows what she's worth. 💰",
+  "meaning": "This is your own-value card, and the slightly uncomfortable truth in it is that you've been pricing yourself for the other person's comfort instead of for the reality of what you bring. 💎\n\nThe flinch you feel when you imagine saying the higher number 😬 isn't proof the number's wrong. It's the old story, the one insisting you have to be small and affordable to get chosen, leaving your body on its way out. 👋\n\nYour worth was never up for debate. Your willingness to say it out loud, without immediately discounting it 🏷️🚫, is the only thing that's been missing. 💅",
+  "why": "You pulled this because you already know your prices are too low. 🔥\n\nYou've known for a while, felt the resentment quietly building 😤, caught yourself over-delivering to justify charging too little. This card is permission with a little shove attached. 👉\n\nRaise it. 📈 Say the real number, the one that makes you slightly nervous, then hold the silence after instead of rushing to soften it with bonuses. 🤐 The right people will say yes to the woman who knows what she's worth. The flinch passes in about four seconds. ⏱️ The self-respect sticks around. 💜",
+  "practiceTitle": "The Four Second Hold",
+  "practiceText": "Say your new price out loud, alone, right now. The one that makes your stomach dip a little. 💰\n\nThen stay completely silent for four seconds after it. Count them properly. That silence is the entire practice, because the flinch doesn't live in the number, it lives in the rush to fill the quiet with a discount or an explanation.\n\nDo it five times. You'll know you've got it when your voice stops going up at the end like you're asking permission.",
+  "tapping": {
+   "setup": "Even though saying the higher number makes my whole body flinch, I'm allowed to be paid properly for this.",
+   "points": [
+    [
+     "Eyebrow",
+     "This flinch when I say the number"
+    ],
+    [
+     "Side of eye",
+     "The rush to soften it before they've even answered"
+    ],
+    [
+     "Under eye",
+     "Everyone I learned to shrink my price for"
+    ],
+    [
+     "Under nose",
+     "Charging less didn't make me safer, it made me tired"
+    ],
+    [
+     "Chin",
+     "What if the number is just a number"
+    ],
+    [
+     "Collarbone",
+     "I'm allowed to be paid what this is worth"
+    ],
+    [
+     "Under arm",
+     "The right people say yes to the real price"
+    ],
+    [
+     "Top of head",
+     "I can say the number and let it sit there"
+    ]
+   ]
+  }
+ },
+ {
+  "slug": "the-clearing",
+  "title": "The Clearing",
+  "desc": "Something has to be let go to make room.",
+  "summary": "You've been adding without ever subtracting, which is why you feel full but not free. Something you've outgrown has to go before the new thing has anywhere to land. You already know what it is. 🪶",
+  "meaning": "You're asking for more while your life and your hands are already stuffed with things that no longer fit 📦, the offer that drains you, the client who underpays and over-texts 📱, the commitment you've outgrown, the inherited money story you've never once questioned. 🍃\n\nAbundance isn't only about calling in. It's also about clearing out. 🧹 Nothing new can land in a space already crammed with what you've outgrown.\n\nThis card is the exhale before the inhale 😮‍💨, the emptying that makes the filling physically possible. ✨",
+  "why": "You pulled this because you've been adding without ever subtracting ➕➖, which is exactly why you feel full but not free, busy but somehow not abundant. 🌬️\n\nSome part of you knows precisely what needs to go. You've just been scared that letting it go means loss instead of space. Look honestly at what you're hauling around that you've outgrown, and set one thing down this week. 🪶\n\nThe empty space will feel weird for a minute. The room you create is what the new thing has been politely waiting for. 🚪 You can't receive with your arms already full. 🤲",
+  "practiceTitle": "Set One Thing Down",
+  "practiceText": "Name what you're hauling around that you've outgrown. The client, the commitment, the offer, the group chat, the version of your business you built for a woman you're not anymore. 🪶\n\nYou already know which one. It came to mind before you finished reading the sentence.\n\nSet it down this week. Send the message, cancel the thing, close the door. The empty space will feel wrong for a few days. That's the space doing its job."
+ },
+ {
+  "slug": "trust-the-timing",
+  "title": "Trust the Timing",
+  "desc": "It's coming. The clock isn't broken.",
+  "summary": "You feel behind because you're measuring against a schedule you invented and against other people's edited middles. You're not late. Tend what's in front of you and stop checking the clock every nine seconds. ⏱️",
+  "meaning": "You've been grading your worth on how long it's taking, treating the wait as proof something's wrong with you or your path. ⏰😣\n\nBut the timeline you imagined was never a contract. 📄🚫 It was a guess, made by an earlier, more anxious version of you, and the universe never signed it.\n\nWhat's yours isn't late. It's moving toward you at exactly the pace that lets you actually hold it when it lands, and the gap between now and then is doing necessary work you'll only appreciate in the rearview mirror. 🚗🪞",
+  "why": "You pulled this because you feel behind, measuring your pace against an invented schedule or against people whose messy middle you conveniently can't see. 👀\n\nThat comparison is robbing your peace 😩 and teaching your nervous system you're failing when you're not. This card came to take the whip out of your hand. 🛑 You are not late. 💜\n\nStop punishing yourself over a deadline you made up. Tend what's in front of you today and let the bigger timing unfold without your anxious supervision. It's coming. The clock was never broken. You just kept checking it every nine seconds. ⏱️😅",
+  "practiceTitle": "Put The Whip Down",
+  "practiceText": "Write down the deadline you've been beating yourself with. The one where you should have hit this by now. ⏱️\n\nNow answer honestly, who set it? Almost always it's you, in a bad mood, measuring against someone whose messy middle you couldn't see.\n\nCross it out. Write today's date and one thing you'll tend today. Every time you catch yourself checking your pace against somebody else's, come back to the one thing in front of you."
+ },
+ {
+  "slug": "the-witness",
+  "title": "The Witness",
+  "desc": "Be seen. The right ones are watching.",
+  "summary": "You've been calling it humility, when honestly it's the fear of being judged, and the hiding is costing you the connections that would change everything. The right people are out there looking for you. Let yourself be seen once, today. 📣",
+  "meaning": "You've been doing the work in the dark 🌑, half-hoping to get discovered without ever actually having to be seen, building quietly, waiting to feel ready before you let anyone look. 🌟\n\nBut money and opportunity flow toward what's visible. 👁️ The people meant to find you, to pay you 💰, to be changed by your work, can't find what you keep stashed in the shadows.\n\nVisibility isn't vanity. ✨ It's a service to the ones who need exactly what you carry, and they can't be served by a gift you've hidden under the bed. 🛏️",
+  "why": "You pulled this because you've been shrinking your visibility to feel safe and filing it under humility, when honestly it's the fear of being judged, misread, or too much. 😬\n\nThat hiding is costing you the exact connections that would change everything. Let yourself be seen today, in one concrete way 📣, post the thing, send the message 📩, say what you actually do without shrinking it into mush.\n\nThe right people are already out there looking for someone like you. 🔍 They just need you to step out of the shadows long enough to be recognized. ✨",
+  "practiceTitle": "Be Seen Once",
+  "practiceText": "Post the thing. Send the message. Say the sentence you've been softening for two weeks. 📣\n\nOne concrete act of being seen today, something with a send button, rather than a plan to be more visible in general.\n\nDo it before you edit it a fourth time. The version you're scared of is the one your people can actually recognise. The mush is what's been keeping them from finding you."
+ },
+ {
+  "slug": "enough-of-the-proving",
+  "title": "Enough of the Proving",
+  "desc": "You don't have to earn rest or wealth.",
+  "summary": "You've tied your worth to your output for so long that rest feels like cheating and ease feels vaguely illegal. You don't have to earn your own life. Put the proving down and take something you didn't work for. 🎁",
+  "meaning": "Somewhere early you got handed the rule that good things must be paid for in exhaustion 😮‍💨, that worthiness is earned through depletion, that rest and money and ease have to be deserved before they're allowed through the door. 🤍\n\nSo you keep proving, performing, over-delivering, staying late ⏰, doing more than anyone asked. But worthiness was never the entry fee 🎟️, and the proving has quietly become its own little prison. 🔒\n\nYou're allowed to stop auditioning for a life that's already yours by birthright. 👑",
+  "why": "You pulled this because you're tired in a way sleep doesn't touch 😴, the bone-deep tiredness of someone who's been trying to earn her own right to exist comfortably. 🌙\n\nYou've tied your worth to your output for so long that rest feels like cheating and getting something easily feels vaguely illegal. 🚔😅 Put the proving down today.\n\nLet yourself receive one good thing you didn't earn 🎁, and resist the powerful urge to immediately repay it or explain why you deserved it. You don't have to deserve your own life. You're allowed to just have it. 💜",
+  "practiceTitle": "Receive Without Repaying",
+  "practiceText": "Take one good thing today that you didn't earn. 🎁\n\nA gift, an easy sale, help you didn't ask for, a compliment, an afternoon off. Let it in and then do nothing about it. No repaying, no evening the score, no explaining to anyone why you deserved it.\n\nThe urge to justify it will come up fast. Sit there and let it pass. That's the whole practice. You're allowed to just have things.",
+  "tapping": {
+   "setup": "Even though rest feels like cheating and I've tied my worth to how much I produce, I'm allowed to have a life I didn't have to earn.",
+   "points": [
+    [
+     "Eyebrow",
+     "This need to be doing something useful"
+    ],
+    [
+     "Side of eye",
+     "Guilt whenever I stop"
+    ],
+    [
+     "Under eye",
+     "Whoever taught me that my worth is my output"
+    ],
+    [
+     "Under nose",
+     "Constant proving has been exhausting me"
+    ],
+    [
+     "Chin",
+     "I don't have to earn my own life"
+    ],
+    [
+     "Collarbone",
+     "I'm allowed to receive without repaying"
+    ],
+    [
+     "Under arm",
+     "I'm worth something on the days I do nothing"
+    ],
+    [
+     "Top of head",
+     "Rest is allowed and it's part of the work"
+    ]
+   ]
+  }
+ },
+ {
+  "slug": "the-spark-returns",
+  "title": "The Spark Returns",
+  "desc": "The fire you thought you lost is still lit.",
+  "summary": "You showed up a little dimmed, quietly wondering if you've still got it. You do. It's just been untended. Go back to the first reason and the fire comes roaring back like it never left. 🔥",
+  "meaning": "You've been quietly mourning a passion you assumed had gone out 🕯️, the fire that made you start this, the excitement buried under months of busyness, doubt, and the unglamorous grind of keeping the lights on. 🔥\n\nIt didn't die, though. It went underground, banked like an ember waiting for a little air. 🌬️ This is a card of returning, of remembering, of feeling the heat creep back into something you'd half written off.\n\nThe spark was never out. ✨ It was just waiting for you to come back and breathe on it instead of poking at it suspiciously. 🤨",
+  "why": "You pulled this because you showed up a little dimmed 🔅, quietly wondering if you've still got it, if the thing you once felt so sure about is still alive in there somewhere.\n\nIt is. 🔥 This card is the ember glowing in the dark, proof the fire's still on. Do one small thing today that reminds you why you started, revisit the original vision, the first reason, the moment you just knew. 💡\n\nDon't wait to feel inspired before you tend it. Tend it, and the inspiration comes roaring back like it never left. 🌟",
+  "practiceTitle": "Go Back To The First Reason",
+  "practiceText": "Find something from the beginning. The first notebook, the original vision, an early message from someone you helped, the note you wrote the day you decided to do this. 🔥\n\nRead it properly, not a quick skim. Let yourself remember what you felt before it became a business with metrics attached.\n\nThen do one small thing today from that place instead of from the plan. The inspiration shows up after you tend it, never before."
+ },
+ {
+  "slug": "money-is-loyal",
+  "title": "Money Is Loyal",
+  "desc": "It's drawn to a woman who expects it.",
+  "summary": "Money responds to how you talk about it when nobody's listening, and right now the muttering is doing the damage. It's drawn to a woman who expects it. Catch one scarcity sentence today and rewrite it. 💌",
+  "meaning": "Money isn't running from you, and it isn't out to punish you. 💰\n\nIt behaves a lot like an animal 🐈, drawn to calm, to clarity, to expectation, and spooked by desperation, apology, and chaos. The way you hold money in your head is pretty much the way it behaves in your life. 🧠\n\nA woman who expects money, who talks about it with ease and welcome instead of dread and lack, becomes a place money actually wants to hang around. 🏡 This isn't magical thinking. It's frequency, and frequency is one of the few things you can genuinely change today. ✨",
+  "why": "You pulled this because if you actually heard how you talk about money when nobody's listening 🤫, you'd find the leak, the muttered I can't afford it, the full-body brace every time you check the balance 🏦, the quiet certainty that there's never enough.\n\nThat inner monologue is the relationship, and money can feel it from a mile off. 👂 This card wants you to catch one of those sentences today and consciously rewrite it into something a woman with money would actually say. ✍️\n\nSpeak to money like it's loyal, welcome, and already on its way 💌, and watch it start acting the part. 💸",
+  "practiceTitle": "Catch One Sentence",
+  "practiceText": "Listen to how you talk about money today, out loud and in your head. 💌\n\nYou'll catch one. I can't afford it. There's never enough. Money's tight. The brace in your chest when you open the banking app.\n\nWhen you catch it, stop and rewrite it out loud into something a woman with money would say. Not a lie, a different frame. Money's on its way. I'm choosing not to spend on that today. Do it once and mean it, then keep catching them all week.",
+  "tapping": {
+   "setup": "Even though I talk about money like it's always leaving, I can learn to speak like a woman who expects it.",
+   "points": [
+    [
+     "Eyebrow",
+     "All the scarcity I mutter without noticing"
+    ],
+    [
+     "Side of eye",
+     "I can't afford it, on repeat"
+    ],
+    [
+     "Under eye",
+     "The brace in my chest before I check the balance"
+    ],
+    [
+     "Under nose",
+     "I learned this language, so I can change it"
+    ],
+    [
+     "Chin",
+     "Money isn't punishing me"
+    ],
+    [
+     "Collarbone",
+     "I'm allowed to expect money to come"
+    ],
+    [
+     "Under arm",
+     "I can speak about it like it's welcome here"
+    ],
+    [
+     "Top of head",
+     "Money is drawn to a woman who expects it"
+    ]
+   ]
+  }
+ },
+ {
+  "slug": "the-full-table",
+  "title": "The Full Table",
+  "desc": "Set a place for it before it arrives.",
+  "summary": "You've been keeping everything small until the money proves itself, and that hesitation is the message you're broadcasting. Prepare like it's coming. How you get ready is how you say what you actually expect. 🕯️",
+  "meaning": "The woman who has it moves like a host, not a beggar. 🍽️\n\nShe gets the room ready before the guest shows up. 🪑 She sets the table for the abundance she's expecting rather than waiting for it to arrive before she'll deign to believe in it.\n\nThis is the energy of living from the end, acting now as if what you called in is already on its way, because the acting-as-if isn't delusion. ✨ It's an instruction to reality, a declaration that you've decided, and the universe pays close attention to a woman who's clearly made up her mind. 💅",
+  "why": "You pulled this because you've been waiting for the money to land before you'll let yourself live like it's coming 💸, keeping everything small and braced until the proof rolls in.\n\nBut that hesitation is its own message, and it's the wrong one to be broadcasting. 📡 Flip it today. Do one thing a woman who knows her abundance is on the way would do, plan as if, prepare as if, decide as if.\n\nSet the table tonight. 🕯️ Move like the guest is already in the car 🚗, because how you prepare is exactly how you signal what you actually expect. 💫",
+  "practiceTitle": "Prepare As If",
+  "practiceText": "Do one thing today that only makes sense if the money's already coming. 🕯️\n\nMake the space in the calendar. Set up the system you'll need at the bigger volume. Buy the thing the work requires. Plan the trip. Clear the shelf.\n\nIt doesn't have to be expensive, it has to be real preparation. How you prepare is how you tell yourself what you actually expect. Set the table before the guest arrives.",
+  "tapping": {
+   "setup": "Even though preparing before the money arrives feels like tempting fate, I'm allowed to get ready for what I'm expecting.",
+   "points": [
+    [
+     "Eyebrow",
+     "This fear of being disappointed"
+    ],
+    [
+     "Side of eye",
+     "Keeping everything small until it's proven"
+    ],
+    [
+     "Under eye",
+     "Bracing so I don't get my hopes up"
+    ],
+    [
+     "Under nose",
+     "Hesitation is the message I've been sending"
+    ],
+    [
+     "Chin",
+     "I'm allowed to expect it"
+    ],
+    [
+     "Collarbone",
+     "Preparing is how I say I believe it"
+    ],
+    [
+     "Under arm",
+     "I can set the table before the guest arrives"
+    ],
+    [
+     "Top of head",
+     "I'm ready to receive what I've asked for"
+    ]
+   ]
+  }
+ },
+ {
+  "slug": "the-honest-no",
+  "title": "The Honest No",
+  "desc": "A boundary is a wealth practice.",
+  "summary": "There's a yes you quietly regret and a no you're scared to say, and the weight of both is sitting on your chest. Your time and energy are the assets here, so guard them like it. Say the no without the apology. 💎",
+  "meaning": "Every yes you hand out from obligation, fear, or the urge to be liked is a quiet withdrawal from your energy, your time, and your sense of your own worth. 🛡️\n\nThis card reframes the boundary you've been dodging as an actual wealth practice. 💰 Your energy is the real currency, the thing everything else is built from, and you've been spending it like it's monopoly money 🎲 to keep other people comfortable.\n\nThe honest no isn't mean. It's the thing that protects the yes that actually matters, the work you're genuinely here to do. ✨",
+  "why": "You pulled this because there's a yes you gave that you quietly regret and a no you're scared to say, and the combined weight of both is sitting squarely on your chest right now. 😮‍💨💜\n\nYou've been treating your boundaries as selfish when they're the entire foundation of a sustainable, abundant life. Say the no today, the honest one, minus the paragraph-long apology and the over-explaining. 🙅‍♀️\n\nProtect your time and energy the way a wealthy woman guards her most valuable assets, because that's precisely what they are. 💎 The right people respect the boundary. The wrong ones were a drain anyway. 🚿",
+  "practiceTitle": "Say It Without The Paragraph",
+  "practiceText": "There's a no you've been avoiding. Say it today. 💎\n\nWrite it in one sentence. No apology at the front, no explanation at the back, no offering three alternatives to soften the blow. Just the no.\n\nRead it back and delete every softener you snuck in. Then send it. The right people will take it fine. The ones who won't were costing you more than you'd noticed.",
+  "tapping": {
+   "setup": "Even though saying no makes me feel like a bad person, my time and energy are worth protecting.",
+   "points": [
+    [
+     "Eyebrow",
+     "This dread about disappointing them"
+    ],
+    [
+     "Side of eye",
+     "Every yes I quietly regret"
+    ],
+    [
+     "Under eye",
+     "Learning that being agreeable kept me safe"
+    ],
+    [
+     "Under nose",
+     "The paragraph of explanation nobody asked for"
+    ],
+    [
+     "Chin",
+     "A no can be kind and still be a no"
+    ],
+    [
+     "Collarbone",
+     "My capacity is an asset"
+    ],
+    [
+     "Under arm",
+     "The right people can handle my boundary"
+    ],
+    [
+     "Top of head",
+     "I'm allowed to say no without the apology"
+    ]
+   ]
+  }
+ },
+ {
+  "slug": "already-rich",
+  "title": "Already Rich",
+  "desc": "Look at what you'd have prayed for once.",
+  "summary": "You've been living in the inventory of what's missing and it's draining a life that already holds a lot. Count what you'd once have prayed for, then go back to wanting more from a completely different place. 🙏",
+  "meaning": "There's a version of you, not even that long ago, who would have cried with gratitude to have what you have right now 🥹, and who you barely register on a normal Tuesday. ✨\n\nWealth is partly a number, sure, but it's just as much a practice of actually seeing 👁️, and somewhere along the way you stopped. You've been so locked onto the gap between here and there that you've gone blind to the abundance you're already standing in.\n\nThe proof you keep demanding from the universe is already here, scattered through your ordinary days, waiting to get noticed. 🌟",
+  "why": "You pulled this because you've been living in the lack, the not-yet, the relentless inventory of what's missing 📋, and it's quietly draining the joy out of a life that already holds a lot. 💜\n\nToday, pause and count what you've got that you once only dreamed of 🙏, the home, the people, the freedom you do have, the work you even get to do at all. Let it land before you reach for more.\n\nGratitude isn't a detour from your ambition. It's the soil your next level grows out of. 🌱 You're already richer than the striving lets you feel. ✨",
+  "practiceTitle": "The Once-Prayed-For List",
+  "practiceText": "Write down five things in your life right now that you once wanted badly and didn't have. 🙏\n\nThe home. The person. The work you get to do at all. The body that carried you here. The freedom you have and stopped noticing the day it became normal.\n\nRead the list slowly and let each one land instead of racing to the end. Then go back to wanting more, from a completely different place than the one you were wanting from an hour ago.",
+  "tapping": {
+   "setup": "Even though I keep counting what's missing, I can see what I already have without giving up on wanting more.",
+   "points": [
+    [
+     "Eyebrow",
+     "This running tally of what I lack"
+    ],
+    [
+     "Side of eye",
+     "How fast the good stuff becomes normal"
+    ],
+    [
+     "Under eye",
+     "Everything I once prayed for and now walk past"
+    ],
+    [
+     "Under nose",
+     "Lack has been my default setting"
+    ],
+    [
+     "Chin",
+     "I'm allowed to notice what's already here"
+    ],
+    [
+     "Collarbone",
+     "Gratitude doesn't mean settling"
+    ],
+    [
+     "Under arm",
+     "I can hold both, having and wanting"
+    ],
+    [
+     "Top of head",
+     "I already have more than I've been counting"
+    ]
+   ]
+  }
+ },
+ {
+  "slug": "the-leap",
+  "title": "The Leap",
+  "desc": "The net appears after you jump.",
+  "summary": "The net shows up after you jump, which is exactly the part your brain refuses to accept. You don't need the whole plan, you need one move you can't take back. Make it before the sensible version talks you out of it. 🪂",
+  "meaning": "You keep waiting for guaranteed footing before you'll commit 🪜, for proof it'll work out before you'll risk anything. 🦋\n\nBut the wealth and the life you actually want live on the far side of the gap, past the edge of whatever can be promised in advance. The leap goes first. The net, the support, the way forward, shows up while you're already in the air 🪂, not before you've left the ledge.\n\nThis is faith in motion, the willingness to fully commit without the receipt 🧾🚫, trusting the ground to rise up and meet your foot. ✨",
+  "why": "You pulled this because you've been circling a decision way too long 🔄, asking for one more sign, one more reassurance, one more guarantee before you'll budge.\n\nThis is the sign 🪧, and the guarantee isn't coming, because that's just not how the mechanism works. Quit negotiating with the fear, it will never, ever hand you permission. 🙅‍♀️\n\nCommit to the thing, take the real step, the one that scares you, and trust the support to show up once you're airborne. 🪂 The leap is your job. The net is the universe's, and it has yet to miss for a woman brave enough to actually jump. 💫",
+  "practiceTitle": "The Smallest Irreversible Move",
+  "practiceText": "Name the leap out loud. Now find the smallest version of it that you can't take back. 🪂\n\nSend the message. Book the call. Put the deposit down. Tell one person who'll ask you about it next week. Not the whole jump, just the piece that quietly removes your own escape hatch.\n\nDo it in the next ten minutes, before your brain drafts a more sensible plan. The sensible plan is how the leap gets postponed for another year."
+ },
+ {
+  "slug": "soften",
+  "title": "Soften",
+  "desc": "It doesn't have to be a fight.",
+  "summary": "You've been fighting for something that wants to come to you gently, and the brace is so habitual you can't feel it anymore. Drop your shoulders. The relaxed version of you is far more magnetic than the one shoving. 😮‍💨",
+  "meaning": "Somewhere you picked up the belief that everything worth having has to be wrestled into existence 🤼, that struggle is proof of worthiness, that if it isn't hard you must be getting away with something. 🌸\n\nBut forcing was never the thing that worked. The ease was. The feeling was. The open, receptive, not-clenched state was. This card is an invitation to put the dukes down. 🥊⬇️\n\nThe strained, gripping effort you've been bringing isn't speeding anything up, it's actively repelling the very thing you're straining for. Struggle isn't the price of abundance. Half the time it's the obstacle. 🚧",
+  "why": "You pulled this because you've been bracing, gripping, fighting for something that genuinely wants to come to you gently, and the strain's become such a habit you don't even feel it anymore. 💜\n\nYour shoulders are somewhere up around your ears. 🙆‍♀️ Let it be easy today. Unclench, exhale 😮‍💨, stop treating receiving like a cage match. 🥊\n\nThe relaxed, open, trusting version of you is dramatically more magnetic 🧲 than the one fighting for every inch. Soften, and notice how much faster things move once you quit shoving them. ✨",
+  "practiceTitle": "Drop Your Shoulders",
+  "practiceText": "Right now, without moving anything else, notice where your shoulders are. 😮‍💨\n\nThey're up. Drop them. Unclench your jaw. Let your belly go. Take one long exhale that runs longer than the inhale.\n\nNow bring to mind the thing you've been fighting for and feel everything tighten again. Soften on purpose while you hold it there. Do that a few times today, then handle the same thing from the loose body instead of the braced one and watch how differently it goes."
+ },
+ {
+  "slug": "the-decision",
+  "title": "The Decision",
+  "desc": "Decide first. The proof comes after.",
+  "summary": "You've been treating certainty as a prerequisite when it's actually a result. Reality is standing by for your decision so it knows what to organise around. Decide properly, then move like it's done. 💯",
+  "meaning": "You keep asking the universe to confirm it before you'll fully commit ⚡, waiting for evidence, a sign, the result to show up before you'll let yourself believe.\n\nIt runs the other way, though. The decision comes first, the full-bodied, no-takebacks, case-closed deciding 🔨, and then reality starts rearranging itself to match what you decided.\n\nThis is the whole engine of living from the end. 🚂 You don't wait to feel certain before you decide. You decide, and the certainty, and eventually the proof, follow the decision out the door. 🚪",
+  "why": "You pulled this because you've been waiting to feel sure, treating certainty as a prerequisite when it's actually a result. ✨\n\nYou want the universe to prove it's safe before you go all in, but that proof's being held precisely because you haven't decided. Make the decision today, the real one, the it's-done, I've-chosen, no-longer-up-for-discussion decision. 💯\n\nMove through the day as a woman who already chose and already has it. Reality is standing by for your decision so it knows what to organize itself around. Decide, and watch it start agreeing with you. 💫",
+  "practiceTitle": "Close The Discussion",
+  "practiceText": "Say it out loud in past tense, like it's already settled. I've decided. It's done. 💯\n\nThen close the conversation you've been having with yourself about it. No more weighing, no more waiting for one more sign, no more asking whether it's the right time.\n\nFor the rest of today, make every small choice as though the decision is already made and the outcome is already coming. Reality organises itself around a woman who's actually decided, and it's been standing by waiting for you to."
+ },
+ {
+  "slug": "the-return",
+  "title": "The Return",
+  "desc": "What you gave is coming back, multiplied.",
+  "summary": "It's felt lately like your giving disappears into a void, and the discouragement is about to close your hands right before the return lands. It's coming back, most likely from a direction you weren't watching. Stay open. 💸",
+  "meaning": "You've poured out, often without keeping score, sometimes without ever getting paid back 🔄, the energy, the care, the work, the generosity handed over in good faith.\n\nThis card promises the ledger isn't lost 📒, even when it's felt like everything you give just evaporates. What you've sent out in good faith is circling back toward you, frequently multiplied ✖️, and usually in a form you wouldn't have predicted.\n\nThe universe has a much longer memory than your discouragement does. 🧠 Nothing genuinely given ever actually disappears. ✨",
+  "why": "You pulled this because lately it's felt like you give and give and it vanishes into a void 🕳️, like your generosity's a leak instead of an investment. 💜\n\nThat feeling is real, but it's not the whole story. This card came to tell you the return is on its way 📬, so stay open to receiving it, especially since it may not come from the direction you gave or in the shape you're expecting.\n\nDon't let the discouragement slam your hands shut right before the return lands. ✊ Keep your heart open. What you've given is coming home, and it's bringing interest. 💸",
+  "practiceTitle": "Keep The Hands Open",
+  "practiceText": "Write down three things you've given lately that felt like they vanished. Time, money, care, effort. 💸\n\nUnderneath, write: it's coming back, and it doesn't have to come from where I gave it. That last part matters, because the return usually arrives from a direction you weren't watching.\n\nThen do one small generous thing today from choice instead of scorekeeping. And say yes to the next thing you're offered, even if it looks unrelated."
+ },
+ {
+  "slug": "the-unshrinking",
+  "title": "The Unshrinking",
+  "desc": "Stop making yourself smaller to be liked.",
+  "summary": "You made yourself smaller again recently and felt the cost of it in your body the second you did it. Take the space back. The people meant for you are drawn to the unshrunk version. ✋",
+  "meaning": "You've spent a long time dimming 🔅, softening your prices, downplaying your gifts, shrinking your ambition so everyone around you stays comfy. 🌟\n\nIt felt safe, even generous. But the wealth and the life you want require the full size of you, and the shrinking that once kept you safe is now the exact thing capping you. 🧢\n\nThis is a card of expansion, of taking up the space you were always meant to occupy. 📈 You weren't put here to be easy to swallow. You were put here to be fully, unapologetically yourself, at full volume. 🔊",
+  "why": "You pulled this because you made yourself smaller again recently, in a conversation, in your pricing, in how you showed up, and you felt the cost of it in your body the second you did it. 😬\n\nThat contraction is familiar and it's exhausting, and it's quietly throttling everything you're capable of. This card is permission to knock it off. ✋ Take up your full space today, say the bold thing, charge the real price 💰, let yourself be as much as you actually are.\n\nThe people meant for you are drawn to the unshrunk version. ✨ The ones who needed you small were never yours to begin with. 👋",
+  "practiceTitle": "Take The Space Back",
+  "practiceText": "Find where you shrank recently. The conversation you softened, the price you dropped, the opinion you swallowed. Your body will point straight at it. ✋\n\nGo back and take the space. Send the follow-up with the real thing in it. Quote the real price on the next one. Say the bold sentence in the next conversation instead of the palatable version.\n\nOne act of unshrinking today. One specific thing you take back, rather than a resolution to be bigger in general.",
+  "tapping": {
+   "setup": "Even though I keep making myself smaller so people stay comfortable, I'm allowed to take up the space I actually need.",
+   "points": [
+    [
+     "Eyebrow",
+     "This habit of shrinking mid-sentence"
+    ],
+    [
+     "Side of eye",
+     "Softening what I meant so it lands easier"
+    ],
+    [
+     "Under eye",
+     "Whenever I learned that small was safer"
+    ],
+    [
+     "Under nose",
+     "Contracting has cost me more than it protected"
+    ],
+    [
+     "Chin",
+     "I'm allowed to be the full size of myself"
+    ],
+    [
+     "Collarbone",
+     "The right people are drawn to the unshrunk version"
+    ],
+    [
+     "Under arm",
+     "I can say the real thing"
+    ],
+    [
+     "Top of head",
+     "Taking up space is allowed"
+    ]
+   ]
+  }
+ },
+ {
+  "slug": "the-still-point",
+  "title": "The Still Point",
+  "desc": "Rest is part of the work.",
+  "summary": "You're running on empty and flooring it anyway, scared that stopping means it all collapses. The exhaustion is warping your decisions, and the answer you've been grinding for is sitting on the other side of a real rest. 😴",
+  "meaning": "You've absorbed the belief that slowing down means falling behind, that any pause is lost ground, that your worth is clocked in constant motion. 🏃‍♀️\n\nBut the field has to lie fallow to stay fertile 🌾, and the most abundant moves often come not from more hustle but from genuine stillness 🌙, the kind that lets clarity float to the surface and the right next step actually reveal itself.\n\nRest isn't the absence of work. It's the part of the work hustle culture trained you to skip, and skipping it is exactly why you keep running on fumes. ⛽😅",
+  "why": "You pulled this because you're running on empty and flooring it anyway 🚗💨, terrified that if you stop, it all collapses or you lose your precious momentum. 💜\n\nThe opposite's true. The exhaustion is warping your decisions and dimming your magnetism, and the answer you've been grinding for is most likely sitting on the other side of an actual rest. 😴\n\nGive yourself permission to stop today, genuinely stop, no guilt and no earning it first. The clarity and the next move are in the stillness, not in one more frantic lap. 🌀 Rest is the productive thing right now, as ironic as that feels. ✨",
+  "practiceTitle": "Actually Stop",
+  "practiceText": "Take a real stop today. Ninety minutes, no phone, no content, no thinking about the business. 😴\n\nA break where you feel guilty and half-work doesn't count. Lie down, walk with nothing in your ears, sit outside, sleep.\n\nDon't earn it first and don't schedule around it. The answer you've been grinding for tends to show up around forty minutes in, once your body finally believes you meant it."
+ },
+ {
+  "slug": "the-clear-channel",
+  "title": "The Clear Channel",
+  "desc": "Say what you do plainly. Watch it land.",
+  "summary": "You've been circling what you do in vague language because the plain version feels too exposed. That fog is costing you the people who'd say yes the moment they understood. Say it in one sentence a friend would get. 🗣️",
+  "meaning": "Confusion is one of the most expensive things in a business 💸, and clarity is one of the most magnetic. 🧲\n\nWhen your message is muddy, when you bury your genius under vague, impressive-sounding language 🌫️, the right people scroll right past, not because your work lacks power but because they couldn't tell it was for them.\n\nClarity is a wealth practice. 📡 The moment you can say what you actually do, plainly and without the hedging, is the moment the people who need you can finally see themselves in your words. ✨",
+  "why": "You pulled this because you've been hiding behind vague language, talking circles around what you do because the clear, simple version feels too bold, too exposed, or somehow not fancy enough. 🌀\n\nBut that fog is costing you the exact people who'd say yes the instant they understood. 🌫️ Practice saying what you do in one plain sentence today, the kind a friend would get immediately, no jargon, no qualifiers, no throat-clearing. 🗣️\n\nClarity isn't dumbing it down. It's the bridge that lets your people find you. 🌉 Say it plainly and watch how fast it lands. 💫",
+  "practiceTitle": "One Plain Sentence",
+  "practiceText": "Write what you do in one sentence a friend would understand instantly. 🗣️\n\nNo jargon, no modality names, no qualifiers, no throat-clearing before you get to the point. If it needs a second sentence to make sense, it isn't done yet.\n\nSay it out loud five times until it stops feeling too simple. Then use it today, in a message, on your page, in a real conversation. Watch how differently it lands when there's nothing to decode."
+ },
+ {
+  "slug": "it-is-done",
+  "title": "It Is Done",
+  "desc": "Live from the end. It's already real.",
+  "summary": "You've been camping out in the wanting when the work is moving into the having. You don't reach for what's already yours, you occupy it. Live from the end and let the world rearrange itself to agree. 👑",
+  "meaning": "This is the fulfilled-wish card, the deepest teaching in this whole practice. ✨🌙\n\nYou don't reach for what's already yours, you occupy it. Somewhere, in the realm where everything begins, it's already complete, already real, already done 💫, and your only job is to feel it as finished until the outer world catches up and stops arguing.\n\nThis isn't hoping, trying, or waiting. It's the quiet, unbothered certainty of a woman who has decided 💅, and who now simply lives from the knowing that it's already so.",
+  "why": "You pulled this because you've been camped out in the wanting ⛺, the reaching, the compulsive refreshing for proof 🔄, and it's time to move into the having. 👑\n\nThis card is the universe telling you the work now isn't to strive harder, it's to feel it done. Today, drop into the satisfaction of your desire already fulfilled, not as a wish but as a memory of the future. 🔮 Feel it in your body, settled and certain.\n\nIt is done. ✅ It was decided the moment you truly chose it, and now you get to live from there while the world rearranges itself to agree. ✨",
+  "practiceTitle": "Live From The End",
+  "practiceText": "Pick one hour today and run it as the woman who already has it. 👑\n\nYou don't have to pretend and you don't have to feel it first. Just move at that frequency. How she checks her phone. How she answers the message. What she doesn't rush toward. What she doesn't worry about, because it's handled.\n\nAt the end of the hour, write down what was different. That gap is the practice. Close it one hour at a time until it's simply how you move."
+ }
+];
+
+var TABS = [
+  ["pull", "I",   "Pull Your Card"],
+  ["card", "II",  "Your Card"],
+  ["more", "\u2726", "Embody Wealth"]
+];
+
+var state = { tab:"pull", three:[], picked:null };
+
+function el(tag, cls, txt){
+  var n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (txt !== undefined && txt !== null) n.textContent = txt;
+  return n;
+}
+function paras(cls, text){
+  var box = el("div", cls);
+  String(text || "").split(/\n\n+/).forEach(function(chunk){
+    var t = chunk.trim();
+    if (t) box.appendChild(el("p", null, t));
+  });
+  return box;
+}
+function cardImg(card){
+  var img = document.createElement("img");
+  img.src = CARD_IMG_BASE + card.slug + ".png";
+  img.alt = card.title;
+  return img;
+}
+function chosen(){ return state.picked === null ? null : DECK[state.picked]; }
+
+/* ---------- rail ---------- */
+function buildRail(){
+  var nav = document.getElementById("railNav");
+  nav.innerHTML = "";
+  TABS.forEach(function(t){
+    var b = el("button", "tab");
+    b.type = "button";
+    b.dataset.tab = t[0];
+    b.appendChild(el("span", "tab-num", t[1]));
+    b.appendChild(el("span", "tab-label", t[2]));
+    b.addEventListener("click", function(){
+      if (b.classList.contains("locked")) return;
+      goTab(t[0]);
+    });
+    nav.appendChild(b);
+  });
+  syncRail();
+}
+
+function syncRail(){
+  document.querySelectorAll(".tab").forEach(function(b){
+    var name = b.dataset.tab;
+    b.classList.toggle("active", name === state.tab);
+    var locked = (name === "card") && state.picked === null;
+    b.classList.toggle("locked", locked);
+    b.setAttribute("aria-disabled", locked ? "true" : "false");
+  });
+  renderRailCard();
+}
+
+function renderRailCard(){
+  var host = document.getElementById("railCards");
+  host.innerHTML = "";
+  var card = chosen();
+  if (!card) return;
+
+  var wrap = el("div", "rail-cards");
+  wrap.appendChild(el("div", "rail-cards-label", "Your card"));
+  var box = el("div", "rail-card");
+  var frame = el("div", "rail-card-img");
+  frame.appendChild(cardImg(card));
+  box.appendChild(frame);
+  box.appendChild(el("div", "rail-card-name", card.title));
+  wrap.appendChild(box);
+
+  var again = el("button", "btn tiny rail-restart", "Pull Again");
+  again.type = "button";
+  again.addEventListener("click", resetAll);
+  wrap.appendChild(again);
+
+  host.appendChild(wrap);
+}
+
+function goTab(name){
+  state.tab = name;
+  document.querySelectorAll(".view").forEach(function(v){ v.classList.remove("active"); });
+  var view = document.getElementById("view-" + name);
+  if (view) view.classList.add("active");
+  if (name === "pull") renderPull();
+  if (name === "card") renderCard();
+  if (name === "more") renderMore();
+  syncRail();
+  window.scrollTo({ top:0, behavior:"smooth" });
+}
+
+function resetAll(){
+  state.three = [];
+  state.picked = null;
+  goTab("pull");
+}
+
+/* ---------- I. pull ---------- */
+function drawThree(){
+  var pool = DECK.map(function(_, i){ return i; });
+  var out = [];
+  for (var k = 0; k < 3; k++){
+    out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+  }
+  return out;
+}
+
+function renderPull(){
+  var host = document.getElementById("view-pull");
+  host.innerHTML = "";
+  state.three = drawThree();
+  state.picked = null;
+
+  host.appendChild(el("div", "eyebrow", "The Wealthy Woman Oracle"));
+  var h = el("h1", "display");
+  h.appendChild(document.createTextNode("Pick the one "));
+  h.appendChild(el("em", null, "your hand goes to"));
+  h.appendChild(document.createTextNode("."));
+  host.appendChild(h);
+  host.appendChild(el("p", "lede", "Take one breath. Hold whatever you've actually been chewing on, the money question, the pricing thing, the decision you keep circling. Then pick without thinking about it."));
+
+  var grid = el("div", "pick");
+  state.three.forEach(function(idx, n){
+    var b = el("button", "pick-card");
+    b.type = "button";
+    b.setAttribute("aria-label", "Card " + (n + 1));
+    var img = document.createElement("img");
+    img.src = CARD_BACK;
+    img.alt = "";
+    b.appendChild(img);
+    b.addEventListener("click", function(){
+      if (state.picked !== null) return;
+      state.picked = idx;
+      b.classList.add("chosen");
+      grid.querySelectorAll(".pick-card:not(.chosen)").forEach(function(c){ c.classList.add("faded"); });
+      setTimeout(function(){ goTab("card"); }, 950);
+    });
+    grid.appendChild(b);
+  });
+  host.appendChild(grid);
+  host.appendChild(el("p", "pick-note", "Three cards, drawn fresh from a deck of thirty-one."));
+}
+
+/* ---------- II. your card ---------- */
+function renderCard(){
+  var host = document.getElementById("view-card");
+  host.innerHTML = "";
+  var card = chosen();
+  if (!card) return;
+
+  host.appendChild(el("div", "eyebrow", "Your Card"));
+  var hero = el("div", "card-hero");
+  hero.appendChild(cardImg(card));
+  host.appendChild(hero);
+  host.appendChild(el("h1", "card-title", card.title));
+  host.appendChild(el("p", "card-tagline", card.desc));
+
+  var short = el("div", "panel in-short");
+  short.appendChild(el("div", "panel-label", "In Short"));
+  short.appendChild(paras("body-text", card.summary));
+  host.appendChild(short);
+
+  var mean = el("div", "panel");
+  mean.appendChild(el("div", "panel-label", "The Meaning"));
+  mean.appendChild(paras("body-text", card.meaning));
+  host.appendChild(mean);
+
+  var why = el("div", "panel");
+  why.appendChild(el("div", "panel-label", "Why You Pulled This"));
+  why.appendChild(paras("body-text", card.why));
+  host.appendChild(why);
+
+  var prac = el("div", "panel practice");
+  prac.appendChild(el("div", "panel-label", "The Practice"));
+  prac.appendChild(el("h4", "practice-title", card.practiceTitle));
+  prac.appendChild(paras("body-text", card.practiceText));
+  host.appendChild(prac);
+
+  if (card.tapping) host.appendChild(tappingPanel(card));
+
+  var acts = el("div", "actions");
+  var again = el("button", "btn primary", "Pull Another Card");
+  again.type = "button";
+  again.addEventListener("click", resetAll);
+  acts.appendChild(again);
+
+  var more = el("button", "btn", "Get The Full Deck");
+  more.type = "button";
+  more.addEventListener("click", function(){ goTab("more"); });
+  acts.appendChild(more);
+  host.appendChild(acts);
+}
+
+function tappingPanel(card){
+  var t = card.tapping;
+  var p = el("div", "panel tapping");
+  p.appendChild(el("div", "panel-label", "Tap It Out"));
+  p.appendChild(el("p", "tap-intro", "This card sits on an old money belief, so tapping shifts it faster than thinking about it will. If you've never done EFT, you tap lightly with two fingers on each point while you say the line out loud. That's the whole technique. Run through it twice."));
+
+  var setup = el("div", "tap-setup");
+  setup.appendChild(el("div", "tap-setup-label", "Setup \u00B7 tap the side of your hand, say it three times"));
+  setup.appendChild(el("div", "tap-setup-text", t.setup));
+  p.appendChild(setup);
+
+  var ul = el("ul", "tap-points");
+  t.points.forEach(function(row){
+    var li = document.createElement("li");
+    li.appendChild(el("span", "tap-pt", row[0]));
+    li.appendChild(el("span", "tap-say", row[1]));
+    ul.appendChild(li);
+  });
+  p.appendChild(ul);
+
+  p.appendChild(el("p", "tap-close", "Take a breath at the end. Notice what shifted, even a little. Then go and do the practice above, because tapping opens the door and the doing walks you through it."));
+  return p;
+}
+
+/* ---------- III. embody wealth ---------- */
+function renderMore(){
+  var host = document.getElementById("view-more");
+  host.innerHTML = "";
+
+  host.appendChild(el("div", "eyebrow", "Embody Wealth"));
+  var h = el("h1", "display");
+  h.appendChild(document.createTextNode("This is one card from "));
+  h.appendChild(el("em", null, "a much bigger room"));
+  h.appendChild(document.createTextNode("."));
+  host.appendChild(h);
+  host.appendChild(el("p", "lede", "Embody Wealth is my community for multi-passionate women who left corporate to build something of their own and are done with the scattered offers and the inconsistent months."));
+  host.appendChild(el("hr", "rule"));
+
+  var promo = el("div", "promo");
+  promo.appendChild(el("div", "panel-label", "\u2726 What's Inside \u2726"));
+  var pt = el("h3", "promo-title");
+  pt.appendChild(document.createTextNode("The frequency work "));
+  pt.appendChild(el("em", null, "and"));
+  pt.appendChild(document.createTextNode(" the business tools."));
+  promo.appendChild(pt);
+  promo.appendChild(el("p", null, "Most spaces give you one or the other. You either get the mindset work with no idea how to sell anything, or the strategy with none of the inner work that makes you able to charge for it. This is both."));
+  var ul = el("ul", "use-list");
+  [
+    "The full 31-card deck with the three-card Path Forward spread, what's blocking you, what's calling you and your next aligned move, read as one message",
+    "Group hypnosis, cacao ceremonies and a monthly theme to work through together",
+    "The Business Gems Toolbox, interactive tools you can rebrand and use in your own community or sell as a micro offer",
+    "Real strategy on your niche, your messaging and building offers people actually buy",
+    "Human Design so you stop running your business against your own wiring"
+  ].forEach(function(t){ ul.appendChild(el("li", null, t)); });
+  promo.appendChild(ul);
+
+  var a = document.createElement("a");
+  a.className = "join-btn";
+  a.href = COMMUNITY_URL;
+  a.target = "_blank";
+  a.rel = "noopener";
+  a.textContent = "Come Join Us";
+  promo.appendChild(a);
+  host.appendChild(promo);
+
+  var deck = el("div", "panel");
+  deck.appendChild(el("div", "panel-label", "The Full Deck"));
+  var db = el("div", "body-text");
+  db.appendChild(el("p", null, "The version you just used shows you three cards. Inside the community you get all thirty-one laid out, plus the three-card spread that reads your block, your call and your next move as one message rather than three separate answers."));
+  db.appendChild(el("p", null, "Premium members also get the raw file, so you can rebrand the whole thing and put it in your own community, sell it as a micro offer, or drop it into a course."));
+  deck.appendChild(db);
+
+  var d = document.createElement("a");
+  d.className = "join-btn";
+  d.style.background = "var(--grad-btn)";
+  d.style.color = "#fff";
+  d.href = FULL_DECK_URL;
+  d.target = "_blank";
+  d.rel = "noopener";
+  d.textContent = "Open The Full Deck";
+  deck.appendChild(d);
+  host.appendChild(deck);
+
+  host.appendChild(el("p", "sign-off", "I believe in you. To living our dreams. \u2014 Aurailia \u2726"));
+}
+
+/* ---------- boot ---------- */
+buildRail();
+goTab("pull");
+</script>
+
+</body>
+</html>
